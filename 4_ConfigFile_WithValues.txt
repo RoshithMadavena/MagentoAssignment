@@ -1,0 +1,20 @@
+//Config file, to avoid hard coding of values
+
+# Application URL
+app.url=https://magento.softwaretestingboard.com/
+
+# WebDriver configuration
+webdriver.driverPath=/path/to/chromedriver
+webdriver.browser=chrome
+webdriver.maximize=true
+
+# Test data
+testdata.firstname=John
+testdata.lastname=Doe
+testdata.email=fakeemail@example.com
+testdata.password=yourpassword
+testdata.invalidEmail=invalid@example.com
+testdata.invalidPassword=invalid123
+testdata.lockedEmail=lockedaccount@example.com
+testdata.lockedPassword=lockedpassword
+testdata.createAccountSuccessMessage=Welcome, John Doe!

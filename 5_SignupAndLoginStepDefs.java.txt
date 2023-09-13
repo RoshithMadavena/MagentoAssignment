@@ -1,0 +1,172 @@
+//StepDefinition file
+
+import io.cucumber.java.After;
+import io.cucumber.java.en.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.junit.Assert;
+
+public class SignupAndLoginStepDefs {
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+
+    @Given("I am on the homepage")
+    public void iAmOnTheHomepage() {
+
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        driver = new ChromeDriver(options);
+        wait = new WebDriverWait(driver, 10);
+        driver.get("https://magento.softwaretestingboard.com/");
+    }
+
+    @When("I navigate to Create an Account")
+    public void iNavigateToCreateAnAccount() {
+        WebElement createAccountLink = driver.findElement(By.linkText("Create an Account"));
+        createAccountLink.click();
+    }
+
+    @And("I create an account with a fake email {string}")
+    public void iCreateAnAccountWithAFakeEmail(String fakeEmail) {
+        try {
+            WebElement firstNameField = driver.findElement(By.id("firstname"));
+            firstNameField.sendKeys("John");
+
+            WebElement lastNameField = driver.findElement(By.id("lastname"));
+            lastNameField.sendKeys("Doe");
+
+            WebElement emailField = driver.findElement(By.id("email_address"));
+            emailField.sendKeys(fakeEmail);
+
+            WebElement passwordField = driver.findElement(By.id("password"));
+            passwordField.sendKeys("yourpassword"); // Replace with the actual password
+
+            WebElement confirmPasswordField = driver.findElement(By.id("password-confirmation"));
+            confirmPasswordField.sendKeys("yourpassword"); 
+
+            WebElement createAccountButton = driver.findElement(By.cssSelector("button[title='Create an Account']"));
+            createAccountButton.click();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @And("I sign out")
+    public void iSignOut() {
+        try {
+            WebElement signOutLink = driver.findElement(By.linkText("Sign Out"));
+            signOutLink.click();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @And("I navigate to Sign In")
+    public void iNavigateToSignIn() {
+        WebElement signInLink = driver.findElement(By.linkText("Sign In"));
+        signInLink.click();
+    }
+
+    @Then("I should be able to sign in with the created account")
+    public void iShouldBeAbleToSignInWithTheCreatedAccount() {
+        try {
+            WebElement emailField = driver.findElement(By.id("email"));
+            WebElement passwordField = driver.findElement(By.id("pass"));
+            WebElement signInButton = driver.findElement(By.id("send2"));
+
+            emailField.sendKeys("fakeemail@example.com");
+            passwordField.sendKeys("yourpassword"); 
+            signInButton.click();
+
+            // Assertions for successful sign-in
+            WebElement welcomeMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".welcome-msg")));
+            Assert.assertTrue("Welcome message is not displayed", welcomeMessage.isDisplayed());
+
+            WebElement userDashboard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("customer-account-navigation-list")));
+            Assert.assertTrue("User dashboard is not displayed", userDashboard.isDisplayed());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @When("I enter invalid email {string}")
+    public void iEnterInvalidEmail(String invalidEmail) {
+        try {
+            WebElement emailField = driver.findElement(By.id("email"));
+            emailField.sendKeys(invalidEmail);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @And("I enter invalid password {string}")
+    public void iEnterInvalidPassword(String invalidPassword) {
+        try {
+            WebElement passwordField = driver.findElement(By.id("pass"));
+            passwordField.sendKeys(invalidPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @And("I click Sign In")
+    public void iClickSignIn() {
+        try {
+            WebElement signInButton = driver.findElement(By.id("send2"));
+            signInButton.click();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Then("I should see an error message {string}")
+    public void iShouldSeeAnErrorMessage(String errorMessage) {
+        try {
+            WebElement errorMessageBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".message-error")));
+            Assert.assertEquals(errorMessage, errorMessageBox.getText());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @When("I leave email and password fields empty")
+    public void iLeaveEmailAndPasswordFieldsEmpty() {
+        try {
+            WebElement emailField = driver.findElement(By.id("email"));
+            emailField.clear();
+
+            WebElement passwordField = driver.findElement(By.id("pass"));
+            passwordField.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @And("I enter a locked account's email and password")
+    public void iEnterALockedAccountSEmailAndPassword() {
+        try {
+            WebElement emailField = driver.findElement(By.id("email"));
+            emailField.sendKeys("lockedaccount@example.com");
+
+            WebElement passwordField = driver.findElement(By.id("pass"));
+            passwordField.sendKeys("lockedpassword");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @After("@cleanup")
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}

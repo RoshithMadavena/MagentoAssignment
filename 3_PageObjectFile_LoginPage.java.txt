@@ -1,0 +1,58 @@
+//Page object file
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class SignInPage {
+
+    private WebDriver driver;
+
+    public SignInPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    private By emailFieldLocator = By.id("email");
+    private By passwordFieldLocator = By.id("pass");
+    private By signInButtonLocator = By.id("send2");
+    private By createAccountLinkLocator = By.linkText("Create an Account");
+    private By forgotPasswordLinkLocator = By.linkText("Forgot Your Password?");
+    private By errorMessageLocator = By.cssSelector(".message-error");
+    private By successMessageLocator = By.cssSelector(".success-msg");
+
+    public void enterEmail(String email) {
+        WebElement emailField = driver.findElement(emailFieldLocator);
+        emailField.sendKeys(email);
+    }
+
+    public void enterPassword(String password) {
+        WebElement passwordField = driver.findElement(passwordFieldLocator);
+        passwordField.sendKeys(password);
+    }
+
+    public void clickSignInButton() {
+        WebElement signInButton = driver.findElement(signInButtonLocator);
+        signInButton.click();
+    }
+
+    public void clickCreateAccountLink() {
+        WebElement createAccountLink = driver.findElement(createAccountLinkLocator);
+        createAccountLink.click();
+    }
+
+    public void clickForgotPasswordLink() {
+        WebElement forgotPasswordLink = driver.findElement(forgotPasswordLinkLocator);
+        forgotPasswordLink.click();
+    }
+
+    public String getErrorMessage() {
+        WebElement errorMessage = driver.findElement(errorMessageLocator);
+        return errorMessage.getText();
+    }
+
+    public String getSuccessMessage() {
+        WebElement successMessage = driver.findElement(successMessageLocator);
+        return successMessage.getText();
+    }
+}

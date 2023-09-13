@@ -1,0 +1,46 @@
+//BDD-Cucumber feature file with positive and negative sceanrios
+
+Feature: Sign-in Functionality for Registered Customers
+
+  Background:
+    Given I am on the homepage
+
+  @positive
+  Scenario: Create an Account, Sign Out, and Sign In
+    When I navigate to Create an Account
+    And I create an account with a fake email "<fakeEmail>"
+    And I sign out
+    And I navigate to Sign In
+    Then I should be able to sign in with the created account
+
+  @negative
+  Scenario Outline: Sign In with Invalid Credentials
+    When I navigate to Sign In
+    And I enter invalid email "<invalidEmail>"
+    And I enter invalid password "<invalidPassword>"
+    And I click Sign In
+    Then I should see an error message "<errorMessage>"
+
+    Examples:
+      | invalidEmail        | invalidPassword | errorMessage           |
+      | invalid@example.com | invalid123      | Invalid login or password |
+      | nonexist@example.com | secret456       | Account doesn't exist    |
+
+  @negative
+  Scenario: Sign In with Empty Credentials
+    When I navigate to Sign In
+    And I leave email and password fields empty
+    And I click Sign In
+    Then I should see an error message "This is a required field."
+
+  @negative
+  Scenario: Sign In with Locked Account
+    When I navigate to Sign In
+    And I enter a locked account's email and password
+    And I click Sign In
+    Then I should see an error message "The account is locked."
+
+  @cleanup
+  After
+    And I close the browser
+
